@@ -87,8 +87,8 @@ const plantsItems = (cards) => {
                 <img
                   src="${card.image}"
                   alt="${card.name}}"
-                  id="plant-card-${card.id}"
-                  class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                  id="plant-img-${card.id}"
+                  class="cursor-pointer w-full h-full object-cover group-hover:scale-110 transition duration-500"
                 />
               </figure>
 
@@ -118,7 +118,9 @@ const plantsItems = (cards) => {
               </div>
     `;
 
-    cardItem.addEventListener("click", () => {
+    const img = cardItem.querySelector(`#plant-img-${card.id}`);
+
+    img.addEventListener("click", () => {
       loadPlantDetails(card.id);
     });
 
@@ -131,6 +133,7 @@ const loadPlantDetails = async (plantId) => {
   try {
     const res = await fetch(url);
     const data = await res.json();
+    // console.log(data.plants);
     renderPlantDetails(data.plants);
   } catch (error) {
     console.log("Failed to fetch categories:", error);
@@ -165,7 +168,7 @@ const renderPlantDetails = (plant) => {
       </div>
     </div>
   `;
-  modal.showModal();
+  document.getElementById("my_modal_1").showModal();
 };
 
 // remove active state from all button color
