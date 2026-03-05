@@ -1,7 +1,8 @@
 const CategoriesListEl = document.getElementById("Categories-list");
 const allPlantsBtn = document.getElementById("all-plants-btn");
 const allCardItems = document.getElementById("all-card-items");
-const modalBoxEl = document.getElementById("modal-box-el");
+const modal = document.getElementById("my_modal_1");
+const modalContent = document.getElementById("modal-content");
 
 const allCategories = async () => {
   const url = "https://openapi.programming-hero.com/api/categories";
@@ -80,7 +81,7 @@ const plantsItems = (cards) => {
 
     const cardItem = document.createElement("div");
     cardItem.className =
-      "group bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-green-100";
+      "plant-card group bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-green-100";
     cardItem.innerHTML = `
         <figure class="aspect-[4/3] bg-green-50 overflow-hidden">
                 <img
@@ -116,9 +117,12 @@ const plantsItems = (cards) => {
                 </button>
               </div>
     `;
-    allCardItems.appendChild(cardItem);
 
-    loadPlantDetails(card.id);
+    cardItem.addEventListener("click", () => {
+      loadPlantDetails(card.id);
+    });
+
+    allCardItems.appendChild(cardItem);
   });
 };
 
@@ -133,9 +137,35 @@ const loadPlantDetails = async (plantId) => {
   }
 };
 
-const renderPlantDetails = (modals) => {
-  // console.log(modals.image);
-  console.log(modals.name);
+const renderPlantDetails = (plant) => {
+  // console.log(plant);
+  modalContent.innerHTML = `
+    <div class="space-y-4">
+      <img 
+        src="${plant.image}" 
+        class="w-full h-80 object-cover rounded-xl"
+      />
+
+      <h2 class="text-3xl font-bold text-green-800">
+        ${plant.name}
+      </h2>
+
+      <p class="text-gray-600 text-base leading-relaxed">
+        ${plant.description}
+      </p>
+
+      <div class="flex justify-between items-center">
+        <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+          ${plant.category}
+        </span>
+
+        <span class="text-2xl font-bold text-green-900">
+          ৳${plant.price}
+        </span>
+      </div>
+    </div>
+  `;
+  modal.showModal();
 };
 
 // remove active state from all button color
