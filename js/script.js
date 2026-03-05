@@ -1,6 +1,7 @@
 const CategoriesListEl = document.getElementById("Categories-list");
 const allPlantsBtn = document.getElementById("all-plants-btn");
 const allCardItems = document.getElementById("all-card-items");
+const modalBoxEl = document.getElementById("modal-box-el");
 
 const allCategories = async () => {
   const url = "https://openapi.programming-hero.com/api/categories";
@@ -8,6 +9,7 @@ const allCategories = async () => {
   try {
     const res = await fetch(url);
     const data = await res.json();
+
     categoriesItems(data.categories);
   } catch (error) {
     console.error("Failed to fetch categories:", error);
@@ -17,35 +19,29 @@ const allCategories = async () => {
 const categoriesItems = (items) => {
   CategoriesListEl.innerHTML = "";
 
-  allPlantsBtn.addEventListener("click", () => {
-    removeActiveFromCategories();
-    allPlantsBtn.classList.add("bg-green-700", "text-white");
-    allPlantsBtn.classList.remove("bg-white", "text-green-800");
-
-    AllPlantsCard();
-  });
-
   items.forEach((item) => {
-    console.log(item.id);
+    // console.log(item.id);
     const li = document.createElement("li");
-    li.innerHTML = `
-      <button onclick="buttonClickEl(${item.id})" id="button-${item.id}" class="category-btn px-4 m-1 py-2.5 rounded-full bg-white border border-green-200 text-green-800 font-medium shadow-sm hover:bg-green-700 hover:text-white hover:shadow-lg active:scale-95 transition-all duration-300">
-        ${item.category_name}
-      </button>
-    `;
 
-    const button = li.querySelector("button");
+    const button = document.createElement("button");
+    button.innerText = item.category_name;
+    button.id = `button-${item.id}`;
+    button.className =
+      "category-btn px-4 m-1 py-2.5 rounded-full bg-white border border-green-200 text-green-800 font-medium shadow-sm hover:bg-green-700 hover:text-white hover:shadow-lg active:scale-95 transition-all duration-300";
 
     button.addEventListener("click", () => {
       removeActiveFromCategories();
       button.classList.add("bg-green-700", "text-white");
       button.classList.remove("bg-white", "text-green-800");
+
+      loadCategoryPlants(item.id);
     });
-    CategoriesListEl.append(li);
+    li.appendChild(button);
+    CategoriesListEl.appendChild(li);
   });
 };
 
-const buttonClickEl = async (id) => {
+const loadCategoryPlants = async (id) => {
   const url = `https://openapi.programming-hero.com/api/category/${id}`;
   try {
     const res = await fetch(url);
@@ -56,11 +52,12 @@ const buttonClickEl = async (id) => {
   }
 };
 
-const AllPlantsCard = async () => {
+const loadAllPlants = async () => {
   const url = "https://openapi.programming-hero.com/api/plants";
   try {
     const res = await fetch(url);
     const data = await res.json();
+
     plantsItems(data.plants);
   } catch (error) {
     console.log("Failed to fetch categories:", error);
@@ -69,14 +66,17 @@ const AllPlantsCard = async () => {
 
 const plantsItems = (cards) => {
   allCardItems.innerHTML = "";
+
+  if (!cards || cards.length === 0) {
+    allCardItems.innerHTML = `
+     <p class="col-span-12 text-center text-gray-500 text-lg">
+        No plants found.
+      </p>`;
+    return;
+  }
+  // console.log(cards);
   cards.forEach((card) => {
     // console.log(card);
-    // console.log(card.category);
-    // console.log(card.description);
-    // console.log(card.id);
-    // console.log(card.image);
-    // console.log(card.name);
-    // console.log(card.price);
 
     const cardItem = document.createElement("div");
     cardItem.className =
@@ -86,6 +86,7 @@ const plantsItems = (cards) => {
                 <img
                   src="${card.image}"
                   alt="${card.name}}"
+                  id="plant-card-${card.id}"
                   class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                 />
               </figure>
@@ -115,8 +116,26 @@ const plantsItems = (cards) => {
                 </button>
               </div>
     `;
-    allCardItems.append(cardItem);
+    allCardItems.appendChild(cardItem);
+
+    loadPlantDetails(card.id);
   });
+};
+
+const loadPlantDetails = async (plantId) => {
+  const url = `https://openapi.programming-hero.com/api/plant/${plantId}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    renderPlantDetails(data.plants);
+  } catch (error) {
+    console.log("Failed to fetch categories:", error);
+  }
+};
+
+const renderPlantDetails = (modals) => {
+  // console.log(modals.image);
+  console.log(modals.name);
 };
 
 // remove active state from all button color
@@ -130,6 +149,15 @@ const removeActiveFromCategories = () => {
   });
 };
 
-AllPlantsCard();
+allPlantsBtn.addEventListener("click", () => {
+  removeActiveFromCategories();
+
+  allPlantsBtn.classList.add("bg-green-700", "text-white");
+  allPlantsBtn.classList.remove("bg-white", "text-green-800");
+
+  loadAllPlants();
+});
+
+loadAllPlants();
 
 allCategories();
