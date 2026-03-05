@@ -1,66 +1,96 @@
-let categoriesList = [];
+const CategoriesListEl = document.getElementById("Categories-list");
+const allPlantsBtn = document.getElementById("all-plants-btn");
+const allCardItems = document.getElementById("all-card-items");
 
-const createElements = (arr) => {
-  return arr
-    .map(
-      (el) => `
-        <a href="#" 
-          class="block px-4 py-2 rounded-lg text-slate-700 hover:text-white hover:bg-green-700 transition duration-300">
-          ${el}
-        </a>
-      `,
-    )
-    .join("");
-};
-
-// Fetch all categories from API
-const allCategories = () => {
+const allCategories = async () => {
   const url = "https://openapi.programming-hero.com/api/categories";
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => categoriesItems(data.categories));
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    categoriesItems(data.categories);
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+  }
 };
 
 const categoriesItems = (items) => {
-  // console.log(items);
-
-  items.forEach((item) => {
-    categoriesList.push(item.category_name);
-  });
-
-  const CategoriesListEl = document.getElementById("Categories-list");
-
   CategoriesListEl.innerHTML = "";
 
-  CategoriesListEl.innerHTML = createElements(categoriesList);
-};
-
-allCategories();
-
-/* const allPlants = () => {
-  const url = "https://openapi.programming-hero.com/api/plants";
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => PlantsWords(data.plants));
-}; */
-
-/* const PlantsWords = (users) => {
-  // console.log(users);
-  // category: "Fruit Tree";
-  // description: "A fast-growing tropical tree that produces delicious, juicy mangoes during summer. Its dense green canopy offers shade, while its sweet fruits are rich in vitamins and minerals.";
-  // id: 1;
-  // image: "https://i.ibb.co.com/cSQdg7tf/mango-min.jpg";
-  // name: "Mango Tree";
-  // price: 500;
-  users.forEach((user) => {
-    console.log(user);
-    // console.log(user.category);
-    // console.log(user.description);
-    // console.log(user.image);
-    // console.log(user.name);
-    // console.log(user.price);
+  items.forEach((item) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <button class="category-btn px-4 m-1 py-2.5 rounded-full bg-white border border-green-200 text-green-800 font-medium shadow-sm hover:bg-green-700 hover:text-white hover:shadow-lg active:scale-95 transition-all duration-300">
+        ${item.category_name}
+      </button>
+    `;
+    CategoriesListEl.append(li);
   });
 };
 
-allPlants();
- */
+const AllPlantsCard = async () => {
+  const url = "https://openapi.programming-hero.com/api/plants";
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    plantsItems(data.plants);
+  } catch (error) {
+    console.log("Failed to fetch categories:", error);
+  }
+};
+
+const plantsItems = (cards) => {
+  allCardItems.innerHTML = "";
+  cards.forEach((card) => {
+    console.log(card);
+    // console.log(card.category);
+    // console.log(card.description);
+    // console.log(card.id);
+    // console.log(card.image);
+    // console.log(card.name);
+    // console.log(card.price);
+
+    const cardItem = document.createElement("div");
+    cardItem.className =
+      "group bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden border border-green-100";
+    cardItem.innerHTML = `
+        <figure class="aspect-[4/3] bg-green-50 overflow-hidden">
+                <img
+                  src="${card.image}"
+                  alt="${card.name}}"
+                  class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                />
+              </figure>
+
+              <div class="p-5">
+                <h3 class="text-xl font-semibold text-green-800 mb-2">
+                  ${card.name}
+                </h3>
+
+                <p class="text-sm text-slate-600 mb-4 leading-relaxed line-clamp-2">
+                  ${card.description}
+                </p>
+
+                <div class="flex justify-between items-center mb-5">
+                  <span
+                    class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800"
+                  >
+                    ${card.category}
+                  </span>
+                  <span class="text-xl font-bold text-green-900">৳${card.price}</span>
+                </div>
+
+                <button
+                  class="w-full py-2.5 rounded-xl bg-gradient-to-r from-green-600 to-green-700 text-white font-medium hover:from-green-700 hover:to-green-800 active:scale-95 transition-all duration-300"
+                >
+                  Add to Cart
+                </button>
+              </div>
+    `;
+    allCardItems.append(cardItem);
+  });
+};
+
+AllPlantsCard();
+
+allCategories();
