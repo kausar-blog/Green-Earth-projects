@@ -17,15 +17,43 @@ const allCategories = async () => {
 const categoriesItems = (items) => {
   CategoriesListEl.innerHTML = "";
 
+  allPlantsBtn.addEventListener("click", () => {
+    removeActiveFromCategories();
+    allPlantsBtn.classList.add("bg-green-700", "text-white");
+    allPlantsBtn.classList.remove("bg-white", "text-green-800");
+
+    AllPlantsCard();
+  });
+
   items.forEach((item) => {
+    console.log(item.id);
     const li = document.createElement("li");
     li.innerHTML = `
-      <button class="category-btn px-4 m-1 py-2.5 rounded-full bg-white border border-green-200 text-green-800 font-medium shadow-sm hover:bg-green-700 hover:text-white hover:shadow-lg active:scale-95 transition-all duration-300">
+      <button onclick="buttonClickEl(${item.id})" id="button-${item.id}" class="category-btn px-4 m-1 py-2.5 rounded-full bg-white border border-green-200 text-green-800 font-medium shadow-sm hover:bg-green-700 hover:text-white hover:shadow-lg active:scale-95 transition-all duration-300">
         ${item.category_name}
       </button>
     `;
+
+    const button = li.querySelector("button");
+
+    button.addEventListener("click", () => {
+      removeActiveFromCategories();
+      button.classList.add("bg-green-700", "text-white");
+      button.classList.remove("bg-white", "text-green-800");
+    });
     CategoriesListEl.append(li);
   });
+};
+
+const buttonClickEl = async (id) => {
+  const url = `https://openapi.programming-hero.com/api/category/${id}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    plantsItems(data.plants);
+  } catch (error) {
+    console.log("Failed to fetch categories:", error);
+  }
 };
 
 const AllPlantsCard = async () => {
@@ -42,7 +70,7 @@ const AllPlantsCard = async () => {
 const plantsItems = (cards) => {
   allCardItems.innerHTML = "";
   cards.forEach((card) => {
-    console.log(card);
+    // console.log(card);
     // console.log(card.category);
     // console.log(card.description);
     // console.log(card.id);
@@ -88,6 +116,17 @@ const plantsItems = (cards) => {
               </div>
     `;
     allCardItems.append(cardItem);
+  });
+};
+
+// remove active state from all button color
+const removeActiveFromCategories = () => {
+  const allButtons = document.querySelectorAll(
+    "#Categories-list button, #all-plants-btn",
+  );
+  allButtons.forEach((btn) => {
+    btn.classList.remove("bg-green-700", "text-white");
+    btn.classList.add("bg-white", "text-green-800");
   });
 };
 
