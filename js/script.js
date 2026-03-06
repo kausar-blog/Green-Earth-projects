@@ -4,6 +4,9 @@ const allCardItems = document.getElementById("all-card-items");
 const modal = document.getElementById("my_modal_1");
 const modalContent = document.getElementById("modal-content");
 const cardItemBusiness = document.getElementById("card-item-business");
+const cartCount = document.getElementById("cart-count");
+const emptyCartBtn = document.getElementById("empty-cart");
+
 const cart = {};
 
 const allCategories = async () => {
@@ -220,17 +223,20 @@ const businessFun = (card) => {
       price: card.price,
       quantity: 1,
     };
-    renderCart();
   }
+
+  renderCart();
 };
 
 const renderCart = () => {
   cardItemBusiness.innerHTML = "";
 
   let total = 0;
+  let count = 0;
 
   Object.values(cart).forEach((item) => {
     total += item.price * item.quantity;
+    count += item.quantity;
 
     const cardDetailsBusiness = document.createElement("div");
 
@@ -245,12 +251,30 @@ const renderCart = () => {
           <p class="text-xs text-slate-500">
             ৳${item.price} × ${item.quantity}
           </p>
+          <div class="flex gap-2 mt-1">
+
+            <button 
+            class="decrease bg-gray-200 px-2 rounded"
+            data-id="${item.id}"
+            >
+            -
+            </button>
+
+            <button 
+            class="increase bg-gray-200 px-2 rounded"
+            data-id="${item.id}"
+            >
+            +
+            </button>
+
+          </div>
         </div>
 
         <button
-          class="w-7 h-7 flex items-center justify-center rounded-full bg-green-100 hover:bg-green-600 hover:text-white transition"
-        >
-          ✕
+          class="remove-item w-7 h-7 flex items-center justify-center rounded-full bg-red-100 hover:bg-red-500 hover:text-white transition"
+          data-id="${item.id}"
+          >
+            ✕
         </button>
     `;
 
@@ -268,7 +292,55 @@ const renderCart = () => {
   `;
 
   cardItemBusiness.append(totalDiv);
+
+  cartCount.innerText = count;
+
+  addCartEvents();
 };
+
+const addCartEvents = () => {
+  document.querySelectorAll(".remove-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+
+      delete cart[id];
+
+      renderCart();
+    });
+  });
+
+  document.querySelectorAll(".increase").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+
+      cart[id].quantity++;
+
+      renderCart();
+    });
+  });
+
+  document.querySelectorAll(".decrease").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.id;
+
+      cart[id].quantity--;
+
+      if (cart[id].quantity <= 0) {
+        delete cart[id];
+      }
+
+      renderCart();
+    });
+  });
+};
+
+emptyCartBtn.addEventListener("click", () => {
+  for (let id in cart) {
+    delete cart[id];
+  }
+
+  renderCart();
+});
 
 loadAllPlants();
 

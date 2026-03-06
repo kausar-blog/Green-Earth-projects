@@ -39,7 +39,7 @@
 
   <body class="bg-[#f0fdf4]">
     <!-- navbar part -->
-    <header class="hidden">
+    <header class="">
       <div class="navbar bg-[#15803D] shadow-md px-4">
         <div class="navbar-start">
           <div class="dropdown">
@@ -98,7 +98,7 @@
     </header>
 
     <!-- hero part  -->
-    <div class="hidden bg-[#CFF0DC] relative py-10 overflow-hidden">
+    <div class="bg-[#CFF0DC] relative py-10 overflow-hidden">
       <!-- Left Image -->
       <img
         src="./assets/hero-leaf1.png"
@@ -231,37 +231,30 @@
           <!-- 🛒 Cart Sidebar -->
           <aside class="col-span-12 md:col-span-3">
             <div class="sticky top-24">
-              <h2 class="text-2xl font-bold text-green-900 mb-6">
-                Your Cart
-              </h2>
+              <div
+                class="bg-white/70 backdrop-blur-lg border border-green-100 rounded-3xl p-6 shadow-lg"
+              >
+                <!-- Cart Header -->
+                <h2 class="text-2xl font-bold text-green-900 mb-4">
+                  Your Cart
+                  <span
+                    id="cart-count"
+                    class="bg-green-600 text-white px-2 py-1 rounded text-sm ml-2"
+                  >
+                    0
+                  </span>
+                </h2>
 
-              <div id="card-item-business">
-                <div
-                  class="bg-white/70 backdrop-blur-lg border border-green-100 rounded-3xl p-6 shadow-lg space-y-4"
+                <!-- Empty Cart Button -->
+                <button
+                  id="empty-cart"
+                  class="mb-4 w-full py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                 >
-                  <!--  <div
-                    class="flex justify-between items-center border-b border-green-100 pb-3"
-                  >
-                    <div>
-                      <p class="text-slate-800 font-medium text-sm">
-                        Mango Tree
-                      </p>
-                      <p class="text-xs text-slate-500"> ৳500 × 1 </p>
-                    </div>
-                    <button
-                      class="w-7 h-7 flex items-center justify-center rounded-full bg-green-100 hover:bg-green-600 hover:text-white transition"
-                    >
-                      ✕
-                    </button>
-                  </div> -->
+                  Empty Cart
+                </button>
 
-                  <!-- <div
-                    class="flex justify-between items-center pt-4 text-lg font-bold text-green-900"
-                  >
-                    <span>Total</span>
-                    <span>৳1000</span>
-                  </div> -->
-                </div>
+                <!-- Cart Items -->
+                <div id="card-item-business" class="space-y-3"></div>
               </div>
             </div>
           </aside>
@@ -308,7 +301,7 @@
     </section>
 
     <!-- card -->
-    <section class="hidden my-16 mx-auto p-5 max-w-7xl">
+    <section class="my-16 mx-auto p-5 max-w-7xl">
       <!-- Section Heading -->
       <h2
         class="text-center text-3xl md:text-4xl font-bold mb-10 text-green-900"
@@ -355,7 +348,7 @@
     </section>
 
     <!--  Plant a Tree Today Section -->
-    <section class="hidden my-16 mx-auto p-5 max-w-4xl">
+    <section class="my-16 mx-auto p-5 max-w-4xl">
       <!-- Section Heading -->
       <h2
         class="text-center text-3xl md:text-4xl font-bold mb-10 text-green-900"
@@ -407,7 +400,7 @@
     </section>
 
     <!-- footer part -->
-    <footer class="hidden bg-green-900 text-white py-6 mt-16">
+    <footer class="bg-green-900 text-white py-6 mt-16">
       <div class="max-w-7xl mx-auto text-center">
         <p class="text-sm md:text-base">
           © 2026 Green Earth. All Rights Reserved.
